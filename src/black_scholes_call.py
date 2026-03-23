@@ -9,7 +9,7 @@ Assumptions:
 import numpy as np
 from scipy.stats import norm
 
-def black_scholes_call(S, K, T, r, sigma):
+def black_scholes_call(S, K, T, r, sigma) -> tuple[float, float]:
     """
     Calculate the Black-Scholes price of a European call option.
 
@@ -27,11 +27,14 @@ def black_scholes_call(S, K, T, r, sigma):
 
     Returns:
     float
-        The price of the European call option
+        The call price of the European call option
+    float
+        The put price of the European put option
     """
     d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
     d2 = d1 - sigma * np.sqrt(T)
 
     call_price = S * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
+    put_price = call_price - S + K * np.exp(-r * T) # Put-Call Parity
     
-    return call_price
+    return call_price, put_price
